@@ -16,7 +16,8 @@ class VotePlayer(Player):
 
 	def __init__(self, index):
 		super().__init__(index)
-		self.is_votemuted 	    = 0
+		self.is_votemuted 	 = 0
+		self.is_voted_mute	 = False
 
 @SayFilter
 def sayfilter(command, index, teamonly):
@@ -33,7 +34,8 @@ def send_votemenu(userid):
 	menu = PagedMenu(title='Votemute\n')
 	for player in PlayerIter('human'):
 		if not userid == player.userid:
-			menu.append(PagedOption('%s' % (player.name), (player.userid)))
+			if not VotedPlayer.from_userid(player.userid).is_voted_mute:
+				menu.append(PagedOption('%s' % (player.name), (player.userid)))
 	menu.select_callback = vote_menu_callback
 	menu.send(index_from_userid(userid))
     
@@ -47,5 +49,6 @@ def vote_menu_callback(_menu, _index, _option):
 		SayText2(f'{RED}[Vote Mute] » {GREEN}{player.name} {LIGHT_GREEN}has voted muted {GREEN}{target.name}').send()
 		SayText2(f'{RED}[Vote Mute] » {GREEN}{target.name} {LIGHT_GREEN}has {GREEN}{target.is_votemuted} of {votes} {LIGHT_GREEN}votes to {GREEN}mute').send()
 		if target.is_votemuted >= votes:
+			target.is_voted_mute = True
 			target.mute()
 			SayText2(f'{RED}[Vote Mute] » {GREEN}{target.name} {LIGHT_GREEN}has been {GREEN}voted {LIGHT_GREEN}to {GREEN}mute!').send()
