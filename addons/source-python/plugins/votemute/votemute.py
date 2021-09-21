@@ -46,7 +46,7 @@ def vote_menu_callback(_menu, _index, _option):
 		player = Player(_index)
 		target = VotePlayer.from_userid(choice)
 		target.is_votemuted += 1
-		SayText2(f'{RED}[Vote Mute] » {GREEN}{player.name} {LIGHT_GREEN}has voted muted {GREEN}{target.name}').send()
+		SayText2(f'{RED}[Vote Mute] » {GREEN}{player.name} {LIGHT_GREEN}has voted mute {GREEN}{target.name}').send()
 		SayText2(f'{RED}[Vote Mute] » {GREEN}{target.name} {LIGHT_GREEN}has {GREEN}{target.is_votemuted} of {votes} {LIGHT_GREEN}votes to {GREEN}mute').send()
 		if target.is_votemuted >= votes:
 			target.is_voted_mute = True
