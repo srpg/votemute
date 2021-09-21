@@ -34,7 +34,7 @@ def send_votemenu(userid):
 	menu = PagedMenu(title='Votemute\n')
 	for player in PlayerIter('human'):
 		if not userid == player.userid:
-			if not VotedPlayer.from_userid(player.userid).is_voted_mute:
+			if not VotePlayer.from_userid(player.userid).is_voted_mute:
 				menu.append(PagedOption('%s' % (player.name), (player.userid)))
 	menu.select_callback = vote_menu_callback
 	menu.send(index_from_userid(userid))
