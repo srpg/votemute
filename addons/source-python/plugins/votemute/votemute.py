@@ -28,7 +28,7 @@ def sayfilter(command, index, teamonly):
 		if userid and command:
 			text = command[0].replace('!', '', 1).replace('/', '', 1).lower()
 			if text == 'votemute':
-				if required_votes() > 2:
+				if required_votes() > 1:
 					send_votemenu(userid)
 					return False
 				else:
