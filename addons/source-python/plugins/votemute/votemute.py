@@ -23,13 +23,18 @@ class VotePlayer(Player):
 def sayfilter(command, index, teamonly):
 	userid = None
 	if index:
-		userid = Player(index).userid
+		player = Player(index)
+		userid = player.userid
 		if userid and command:
 			text = command[0].replace('!', '', 1).replace('/', '', 1).lower()
 			if text == 'votemute':
-				send_votemenu(userid)
-				return False
-                
+				if required_votes() > 2:
+					send_votemenu(userid)
+					return False
+				else:
+					SayText2(f"{RED}[Vote Mute] » {GREEN}Server {LIGHT_GREEN}doesn't have enough {GREEN}players, required {LIGHT_GREEN}amount is {GREEN}2").send(player.index)        
+					return False
+
 def send_votemenu(userid):
 	menu = PagedMenu(title='Votemute\n')
 	for player in PlayerIter('human'):
