@@ -1,3 +1,4 @@
+from events import Event
 from players.entity import Player
 from commands.say import SayFilter
 from menus import PagedMenu, PagedOption
@@ -18,6 +19,12 @@ class VotePlayer(Player):
 		super().__init__(index)
 		self.is_votemuted 	 = 0
 		self.is_voted_mute	 = False
+
+@Event('player_disconnect')
+def player_disconnect(args):
+	player = VotePlayer.from_userid(args['userid'])
+	if player.is_voted_mute:
+		player.unmute()
 
 @SayFilter
 def sayfilter(command, index, teamonly):
