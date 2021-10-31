@@ -1,6 +1,6 @@
 from events import Event
 from players.entity import Player
-from commands.say import SayFilter
+from commands.say import SayCommand
 from menus import PagedMenu, PagedOption
 from players.helpers import index_from_userid
 from messages import SayText2
@@ -26,21 +26,17 @@ def player_disconnect(args):
 	if player.is_voted_mute:
 		player.unmute()
 
-@SayFilter
-def sayfilter(command, index, teamonly):
-	userid = None
-	if index:
+for i in ['votemute', '!votemute', '/votemute']:
+	@SayCommand(f'{i}')
+	def say_command(command, index, teamonly):
 		player = Player(index)
 		userid = player.userid
-		if userid and command:
-			text = command[0].replace('!', '', 1).replace('/', '', 1).lower()
-			if text == 'votemute':
-				if required_votes() > 1:
-					send_votemenu(userid)
-					return False
-				else:
-					SayText2(f"{RED}[Vote Mute] » {GREEN}Server {LIGHT_GREEN}doesn't have enough {GREEN}players, required {LIGHT_GREEN}amount is {GREEN}2").send(player.index)        
-					return False
+		if required_votes() > 1:
+			send_votemenu(userid)
+			return False
+		else:
+			SayText2(f"{RED}[Vote Mute] » {GREEN}Server {LIGHT_GREEN}doesn't have enough {GREEN}players, required {LIGHT_GREEN}amount is {GREEN}2").send(player.index)        
+			return False
 
 def send_votemenu(userid):
 	menu = PagedMenu(title='Votemute\n')
